@@ -1,18 +1,75 @@
 import {defineConfig} from '@sanity/pkg-utils'
+import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
+import path from 'path'
+import {env} from 'process'
+
+import {cssBundle} from './rollup/css-bundle'
+
+const isProd = env['NODE_ENV'] === 'production'
 
 export default defineConfig({
+  babel: {reactCompiler: true},
   extract: {
     rules: {
       'ae-internal-missing-underscore': 'off',
-      'ae-incompatible-release-tags': 'warn',
-      'ae-missing-release-tag': 'warn',
     },
+  },
+  reactCompilerOptions: {target: '19'},
+  rollup: {
+    output: {
+      assetFileNames({names}) {
+        let n = names[0].replace(/^src\//, '')
+
+        // [name].css.ts.vanilla.css
+        if (n.endsWith('.css.ts.vanilla.css')) {
+          n = n.replace('.css.ts.vanilla.css', '.css')
+        }
+
+        return n
+      },
+
+      exports: 'named',
+    },
+    plugins: [
+      vanillaExtractPlugin({
+        identifiers: (options) => {
+          const {debugId, hash, filePath} = options
+
+          if (filePath === 'src/css/layers.css.ts' && debugId) {
+            return `ui-${debugId}`
+          }
+
+          if (isProd) {
+            return `ui-${hash}`
+          }
+
+          const basename = path.basename(filePath, '.css.ts')
+          const name = dashCase([basename, debugId && sanitize(debugId)].filter(Boolean).join('-'))
+
+          return `${name}-${hash}`
+        },
+      }),
+      cssBundle({
+        cleanAssets: isProd,
+        assetFileName: ({name}) => `src/${name === 'css' ? 'index' : name}.css`,
+      }),
+    ],
   },
   strictOptions: {
     // disable warning when not using browserslist in package.json
     noImplicitBrowsersList: 'off',
   },
   tsconfig: 'tsconfig.dist.json',
-  babel: {reactCompiler: true, styledComponents: true},
-  reactCompilerOptions: {target: '18'},
 })
+
+function dashCase(str: string): string {
+  return str
+    .replace(/([A-Z])/g, '-$1')
+    .toLowerCase()
+    .replace(/^-/, '')
+}
+
+function sanitize(str: string): string {
+  // remove all non-alphanumeric characters except for dashes
+  return str.replace(/[^a-zA-Z0-9-]/g, '')
+}

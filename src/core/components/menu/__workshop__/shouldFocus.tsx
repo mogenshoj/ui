@@ -1,8 +1,7 @@
+import {Button, Flex, LayerProvider, Popover} from '@sanity/ui'
 import {useSelect} from '@sanity/ui-workshop'
 import {Fragment, useCallback, useState} from 'react'
 
-import {Button, Flex, Popover} from '../../../primitives'
-import {LayerProvider} from '../../../utils'
 import {Menu} from '../menu'
 import {MenuDivider} from '../menuDivider'
 import {MenuItem} from '../menuItem'

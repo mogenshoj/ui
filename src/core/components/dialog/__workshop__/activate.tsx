@@ -1,8 +1,16 @@
+import {
+  Button,
+  Flex,
+  Layer,
+  LayerProvider,
+  Menu,
+  MenuButton,
+  MenuItem,
+  Stack,
+  Text,
+} from '@sanity/ui'
 import {useState} from 'react'
 
-import {Button, Flex, Stack, Text} from '../../../primitives'
-import {Layer, LayerProvider} from '../../../utils'
-import {Menu, MenuButton, MenuItem} from '../../menu'
 import {Dialog} from '../dialog'
 
 export default function LayeringFocusStory() {
@@ -28,7 +36,7 @@ export default function LayeringFocusStory() {
               onActivate={({activeElement}) => activeElement?.focus()}
               onClose={() => setFirstDialogOpen(false)}
             >
-              <Stack space={2} padding={3}>
+              <Stack gap={2} padding={3}>
                 <Button
                   mode="ghost"
                   text="Open dialog 2"
@@ -56,7 +64,7 @@ export default function LayeringFocusStory() {
                   onActivate={({activeElement}) => activeElement?.focus()}
                   onClose={() => setSecondDialogOpen(false)}
                 >
-                  <Stack space={2} padding={3}>
+                  <Stack gap={2} padding={3}>
                     <Button
                       mode="ghost"
                       text="Open dialog 3"
@@ -84,7 +92,7 @@ export default function LayeringFocusStory() {
                       onActivate={({activeElement}) => activeElement?.focus()}
                       onClose={() => setThirdDialogOpen(false)}
                     >
-                      <Stack space={2} padding={3}>
+                      <Stack gap={2} padding={3}>
                         <MenuButton
                           id="menu"
                           button={
@@ -116,7 +124,7 @@ export default function LayeringFocusStory() {
                           onActivate={({activeElement}) => activeElement?.focus()}
                           onClose={() => setFourthDialogOpen(false)}
                         >
-                          <Stack space={2} padding={3}>
+                          <Stack gap={2} padding={3}>
                             <Text>👋</Text>
                           </Stack>
                         </Dialog>

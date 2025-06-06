@@ -1,0 +1,9 @@
+import {useContext} from 'react'
+
+import {CardContext} from './cardContext'
+import type {CardContextValue} from './types'
+
+/** @public */
+export function useCard(): CardContextValue | null {
+  return useContext(CardContext)
+}
